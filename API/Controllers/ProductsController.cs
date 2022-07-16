@@ -1,17 +1,14 @@
 using API.Dtos;
+using API.Errors;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [ApiController]                 // Atribute
-    [Route("api/[controller]")]     // Route
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
     {
         
         private readonly IGenericRepository<Product> _productsRepo;
@@ -40,11 +37,15 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]    // id is HTTP parameter, HTTP get method: products/id
+        [ProducesResponseType(StatusCodes.Status200OK)] // Add more information for swagger
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)] // typeof(ApiResponse): customise return data type for swagger
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
 
             var product = await _productsRepo.GetEntityWithSpec(spec);
+
+            if (product == null) return NotFound(new ApiResponse(404));
 
             return _mapper.Map<Product, ProductToReturnDto>(product);
         }      
