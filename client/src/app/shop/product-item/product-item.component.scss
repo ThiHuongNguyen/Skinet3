@@ -5,3 +5,11 @@
 .btn {
     width: 50%;
 }
+
+.img-product {
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+    }
+}
