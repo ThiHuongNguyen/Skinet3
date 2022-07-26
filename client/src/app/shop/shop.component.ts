@@ -13,7 +13,7 @@ import { ShopService } from './shop.service';
 })
 
 export class ShopComponent implements OnInit {
-  @ViewChild('search', { static: true }) searchTerm: ElementRef; // To access form search
+  @ViewChild('search', { static: false }) searchTerm: ElementRef; // To access form search
   products: IProduct[];
   brands: IBrand[];
   productTypes: IType[];
